@@ -1,0 +1,35 @@
+# Valid Variable Names
+REVENUE_YEAR
+MaxVal
+_Length
+
+# Invalid variable Names
+Miles Per Liter	#contains Space.
+RainfFall%      # contains apecial character other than underscore.
+90_high		# Starts with a number.
+
+
+
+# Temporary data sets.
+DATA TempData;
+DATA abc;
+DATA newdat;
+
+# Permanent data sets.
+DATA LIBRARY1.DATA1
+DATA MYLIB.newdat;
+
+
+
+* This is comment ;
+Following is a multiline comment example:
+
+* This is first line of the comment
+* This is second line of the comment;
+
+/* This is comment */
+
+/* This is first line of the comment
+* This is second line of the comment */
+
+

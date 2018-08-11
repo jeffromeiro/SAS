@@ -1,0 +1,50 @@
+Do index loop
+
+Syntax
+DO indexvariable = initialvalue to finalvalue ;
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA1;
+SUM = 0;
+DO VAR = 1 to 5;
+   SUM = SUM+VAR;
+END;
+
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+Do While
+
+DO WHILE (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO WHILE(VAR<6) ;
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;
+
+
+
+Do Until
+
+Syntax
+DO UNTIl (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO UNTIL(VAR>5);
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;

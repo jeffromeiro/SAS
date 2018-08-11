@@ -1,0 +1,78 @@
+Arithmetic Operators
+
+DATA MYDATA1;
+input @1 COL1 4.2	@7 COL2 3.1; 
+Add_result = COL1+COL2;
+Sub_result = COL1-COL2;
+Mult_result = COL1*COL2;
+Div_result = COL1/COL2;
+Expo_result = COL1**COL2;
+datalines;
+11.21 5.3
+3.11  11
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Logical Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+and_=(COL1 > 10 & COL2 > 5 );
+or_ = (COL1 > 12 | COL2 > 15 );
+not_ = ~( COL2 > 7 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Comparison Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+EQ_ = (COL1 = 11.21);
+NEQ_= (COL1 ^= 11.21);
+GT_ = (COL2 => 8);
+LT_ = (COL2 <= 12);
+IN_ = COL2 in( 6.2,5.3,12 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Minimum/Maximum Operators
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1 @12 COL3 6.3; 
+min_ = MIN(COL1 , COL2 , COL3);
+max_ = MAX( COL1, COl2 , COL3);
+datalines;
+11.21 5.3 29.012
+3.11  11.4 18.512
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Concatenation Operator
+
+DATA MYDATA1;
+input  COL1 $	COL2 $  COL3 $; 
+concat_ = (COL1 || COL2 || COL3);
+datalines;
+Tutorial s point
+simple easy learning
+;
+PROC PRINT DATA = MYDATA1;
+RUN;

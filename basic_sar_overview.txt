@@ -1,0 +1,1748 @@
+	#Overview
+
+data TEMP;
+INPUT ID	NAME $	SALARY	DEPARTMENT $;
+comm = SALARY*0.25;
+LABEL ID = 'Employee id' comm = 'COMMISION';
+DATALINES;
+1 Rick 623.3 IT
+2 Dan 515.2 Operations
+3 Michelle 611 IT
+4 Ryan 729 HR
+5 Gary 843.25 Finance
+6 Nina 578 IT
+7 Simon 632.8 Operations
+8 Guru 722.5 Finance
+;
+RUN;
+
+PROC MEANS;
+run;
+
+PROC PRINT data=temp;
+WHERE salary > 700;
+run;
+
+# Valid Variable Names
+REVENUE_YEAR
+MaxVal
+_Length
+
+# Invalid variable Names
+Miles Per Liter	#contains Space.
+RainfFall%      # contains apecial character other than underscore.
+90_high		# Starts with a number.
+
+
+
+# Temporary data sets.
+DATA TempData;
+DATA abc;
+DATA newdat;
+
+# Permanent data sets.
+DATA LIBRARY1.DATA1
+DATA MYLIB.newdat;
+
+
+
+* This is comment ;
+Following is a multiline comment example:
+
+* This is first line of the comment
+* This is second line of the comment;
+
+/* This is comment */
+
+/* This is first line of the comment
+* This is second line of the comment */
+
+
+SAS Variable Types
+
+INPUT VAR1 VAR2 VAR3; 		#Define numeric variables in the data set.
+
+Example
+INPUT ID SALARY COMM_PERCENT;
+
+
+INPUT VAR1 $ VAR2 $ VAR3 $; 	#Define character variables in the data set.
+Example
+INPUT FNAME $ LNAME $ ADDRESS $;
+
+
+INPUT VAR1 DATE11. VAR2 MMDDYY10. ; #Define date variables in the data set.
+INPUT DOB DATE11. START_DATE MMDDYY10. ;
+
+
+Example
+The below code shows how the three types of variables are declared and used in a SAS Program
+
+DATA TEMP;
+INPUT ID NAME $ SALARY DEPT $ DOJ DATE9. ;
+FORMAT DOJ DATE9. ;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Michelle 611 IT 21OCT2000
+4 Ryan 729 HR 30JUL2012
+5 Gary 843.25 FIN 06AUG2000
+6 Tusar 578 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+data string_examples;
+   LENGTH string1 $ 6 String2 $ 5;
+   /*String variables of length 6 and 5 */
+   String1 = 'Hello';
+   String2 = 'World';
+   Joined_strings =  String1 ||String2 ;
+ run;
+proc print data = string_examples noobs;
+run;
+
+
+SUBSTRN
+This function extracts a substring using the start and end positions. In case of no end position is mentioned it extracts all the characters till end of the string.
+
+Syntax
+SUBSTRN('stringval',p1,p2)
+
+data string_examples;
+   LENGTH string1 $ 6 ;
+   String1 = 'Hello';
+   sub_string1 = substrn(String1,2,4) ;
+   /*Extract from position 2 to 4 */
+   sub_string2 = substrn(String1,3) ;
+   /*Extract from position 3 onwards */
+run;
+proc print data = string_examples noobs;
+run;
+
+
+TRIMN
+
+Syntax
+TRIMN('stringval')
+
+data string_examples;
+   LENGTH string1 $ 7  ;
+   String1='Hello  ';
+   length_string1 = lengthc(String1);
+   length_trimmed_string = lengthc(TRIMN(String1));
+run;
+proc print data = string_examples noobs;
+run;
+ARRAY ARRAY-NAME(SUBSCRIPT) ($) VARIABLE-LIST ARRAY-VALUES
+
+ARRAY is the SAS keyword to declare an array.
+ARRAY-NAME is the name of the array which follows the same rule as variable names.
+SUBSCRIPT is the number of values the array is going to store.
+($) is an optional parameter to be used only if the array is going to store character values.
+VARIABLE-LIST is the optional list of variables which are the place holders for array values.
+ARRAY-VALUES are the actual values that are stored in the array. They can be declared here or can be read from a file or dataline.
+
+# Declare an array of length 5 named AGE with values.
+ARRAY AGE[5] (12 18 5 62 44);
+
+# Declare an array of length 5 named COUNTRIES with values starting at index 0.
+ARRAY COUNTRIES(0:8) A B C D E F G H I;
+
+# Declare an array of length 5 named QUESTS which contain character values.
+ARRAY QUESTS(1:5) $ Q1-Q5;
+
+# Declare an array of required length as per the number of values supplied.
+ARRAY ANSWER(*) A1-A100;
+
+
+
+
+
+DATA array_example;
+INPUT a1 $ a2 $ a3 $ a4 $ a5 $;
+ARRAY colours(5) $ a1-a5;
+mix = colours[1]||'+'||colours[2];
+DATALINES;
+yello pink orange green blue
+;
+RUN;
+PROC PRINT DATA=array_example;
+RUN;
+
+
+Using the OF operator
+The OF operator is used when analysing the data forma an Array to perform calculations on the entire row of an array. In the below example we apply the Sum and Mean of values in each row.
+
+DATA array_example_OF;
+	INPUT A1 A2 A3 A4;
+	ARRAY A(4) A1-A4;
+	A_SUM=SUM(OF A(*));
+	A_MEAN=MEAN(OF A(*));
+	A_MIN=MIN(OF A(*));
+	DATALINES;
+	21 4 52 11
+	96 25 42 6
+	;
+	RUN;
+	PROC PRINT DATA=array_example_OF;
+	RUN;
+
+
+Using the IN operator
+The value in an array can also be accessed using the IN operator which checks for the presence of a value in the row of the array. In the below example we check for the availability of the colour "Yellow" in the data. This value is case sensitive.
+
+DATA array_in_example;
+	INPUT A1 $ A2 $ A3 $ A4 $;
+	ARRAY COLOURS(4) A1-A4;
+	IF 'yellow' IN COLOURS THEN available='Yes';ELSE available='No';
+	DATALINES;
+	Orange pink violet yellow
+	;
+	RUN;
+	PROC PRINT DATA=array_in_example;
+	RUN;
+
+
+
+Syntax
+The Syntax for a numeric informat is:
+
+Varname Formatnamew.d
+Following is the description of the parameters used:
+
+Varname is the name of the variable.
+Formatname is the name of the name of the numeric format applied to the variable.
+w is the maximum number of data columns (including digits after decimal & the decimal point itself) allowed to be stored for the variable.
+d is the number of digits to the right of the decimal.
+
+Reading Numeric formats
+Below is a list of formats used for reading the data into SAS.
+
+Input Numeric Formats
+Format	Use
+n.	Maximum "n" number of columns with no decimal point.
+n.p	Maximum "n" number of columns with "p" decimal points.
+COMMAn.p	Maximum "n" number of columns with "p" decimal places which removes any comma or dollar signs.
+
+
+
+Displaying Numeric formats
+Similar to applying format while reading the data, below is a list of formats used for displaying the data in the output of a SAS program.
+
+Output Numeric Formats
+n.	Write maximum "n" number of digits with no decimal point.
+n.p	Write maximum "n.p" number of columns with "p" decimal points.
+DOLLARn.p	Write maximum "n" number of columns with p decimal places, leading dollar sign and a comma at the thousandth place.
+
+
+Examples
+Below examples illustrate above scenarios.
+
+DATA MYDATA1;
+input x 6.; /*maxiiuum width of the data*/
+format x 6.3;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+DATA MYDATA2;
+input x 6.; /*maximum width of the data*/
+format x 5.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA2;
+RUN;
+
+DATA MYDATA3;
+input x 6.; /*maximum width of the data*/
+format x DOLLAR10.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA3;
+RUN;
+
+
+
+
+1 	8722.0 # Display 6 columns with zero appended after decimal.
+2 	93.200 # Display 6 columns with zero appended after decimal.
+3 	0.112  # No integers before decimal, so display 3 available digits after decimal.
+4 	15.116 # Display 6 columns with 3 available digits after decimal.
+
+# MYDATA2
+Obs 	x
+1 	8722  # Display 5 columns. Only 4 are available.
+2 	93.20 # Display 5 columns with zero appended after decimal.
+3 	0.11  # Display 5 columns with 2 places after decimal.
+4 	15.12 # Display 5 columns with 2 places after decimal.
+
+# MYDATA3
+Obs 	x
+1 	$8,722.00 # Display 10 columns with leading $ sign, comma at thousandth place and zeros appended after decimal.
+2 	$93.20    # Only 2 integers available before decimal and one available after the decimal.
+3 	$0.11	  # No integers available before decimal and two available after the decimal.
+4 	$15.12    # Only 2 integers available before decimal and two available after the decimal.
+Arithmetic Operators
+
+DATA MYDATA1;
+input @1 COL1 4.2	@7 COL2 3.1; 
+Add_result = COL1+COL2;
+Sub_result = COL1-COL2;
+Mult_result = COL1*COL2;
+Div_result = COL1/COL2;
+Expo_result = COL1**COL2;
+datalines;
+11.21 5.3
+3.11  11
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Logical Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+and_=(COL1 > 10 & COL2 > 5 );
+or_ = (COL1 > 12 | COL2 > 15 );
+not_ = ~( COL2 > 7 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Comparison Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+EQ_ = (COL1 = 11.21);
+NEQ_= (COL1 ^= 11.21);
+GT_ = (COL2 => 8);
+LT_ = (COL2 <= 12);
+IN_ = COL2 in( 6.2,5.3,12 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Minimum/Maximum Operators
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1 @12 COL3 6.3; 
+min_ = MIN(COL1 , COL2 , COL3);
+max_ = MAX( COL1, COl2 , COL3);
+datalines;
+11.21 5.3 29.012
+3.11  11.4 18.512
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Concatenation Operator
+
+DATA MYDATA1;
+input  COL1 $	COL2 $  COL3 $; 
+concat_ = (COL1 || COL2 || COL3);
+datalines;
+Tutorial s point
+simple easy learning
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+Do index loop
+
+Syntax
+DO indexvariable = initialvalue to finalvalue ;
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA1;
+SUM = 0;
+DO VAR = 1 to 5;
+   SUM = SUM+VAR;
+END;
+
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+Do While
+
+DO WHILE (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO WHILE(VAR<6) ;
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;
+
+
+
+Do Until
+
+Syntax
+DO UNTIl (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO UNTIL(VAR>5);
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;
+1	IF Statement.
+An if statement consists of a condition. If the condition is true then the specific data is fetched.
+
+2	IF-THEN-ELSE Statement.
+An if statement followed by else statement, which executes when the boolean condition is false.
+
+3	IF-THEN-ELSE-IF Statement.
+An if statement followed by else statement, which is again followed by another pair of IF-THEN Statement.
+
+4	IF-THEN-DELETE Statement.
+An if statement consists of acondition, which when true deletes the specific data from the observations.
+
+
+IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE Statement
+
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650 THEN SALRANGE ="HIGH";
+ELSE SALRANGE = "LOW";
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY < 600 THEN SALRANGE ="LOW";
+ELSE IF 600 <= SALARY <= 700 THEN SALRANGE="MEDIUM";
+ELSE IF 700 < SALARY THEN SALRANGE="MEDIUM";
+PROC PRINT DATA=EMPDAT1;
+run; 
+
+
+IF-THEN-DELETE Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 700 THEN DELETE;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+Mathematical Functions
+
+
+data Math_functions;
+v1=21; v2=42; v3=13; v4=10; v5=29;
+
+/* Get Maximum value */
+max_val = MAX(v1,v2,v3,v4,v5);
+
+/* Get Minimum value */
+min_val = MIN (v1,v2,v3,v4,v5);
+
+/* Get Median value */
+med_val = MEDIAN (v1,v2,v3,v4,v5);
+
+/* Get a random number */
+rand_val = RANUNI(0);
+
+/* Get Square root of sum of the values */
+SR_val= SQRT(sum(v1,v2,v3,v4,v5));
+
+proc print data = Math_functions noobs;
+run;
+
+
+
+Using array
+
+data Math_functions2;
+array v[5] (21 42 13 10 39);
+/* Get Maximum value */
+max_val = MAX(of v(*));
+
+/* Get Minimum value */
+min_val = MIN (of v(*));
+
+/* Get Median value */
+med_val = MEDIAN (of v(*));
+
+/* Get a random number */
+rand_val = RANUNI(0);
+
+/* Get Square root of sum of the values */
+SR_val= SQRT(sum(of v(*)));
+
+proc print data=math_functions2;
+run;
+
+
+
+Date Functions
+
+
+data date_functions;
+INPUT @1 date1 date9. @11 date2 date9.;
+format date1 date9.  date2 date9.;
+
+/* Get the interval between the dates in years*/
+Years_ = INTCK('YEAR',date1,date2);
+
+/* Get the interval between the dates in months*/
+months_ = INTCK('MONTH',date1,date2);
+
+/* Get the week day from the date*/
+weekday_ =  WEEKDAY(date1);
+
+/* Get Today's date in SAS date format */
+today_ = TODAY();
+
+/* Get current time in SAS time format */
+time_ = time();
+DATALINES;
+21OCT2000 16AUG1998
+01MAR2009 11JUL2012
+;
+proc print data = date_functions noobs;
+run;
+
+
+Character Functions
+
+
+data character_functions;
+
+/* Convert the string into lower case */
+lowcse_ = LOWCASE('HELLO');
+  
+/* Convert the string into upper case */
+upcase_ = UPCASE('hello');
+  
+/* Reverse the string */
+reverse_ = REVERSE('Hello');
+  
+/* Return the nth word */
+nth_letter_ = SCAN('Learn SAS Now',2);
+run;
+
+proc print data = character_functions noobs;
+run;
+
+
+
+Truncation Functions
+
+data trunc_functions;
+
+/* Nearest greatest integer */
+ceil_ = CEIL(11.85);
+  
+/* Nearest greatest integer */
+floor_ = FLOOR(11.85);
+  
+/* Integer portion of a number */
+int_ = INT(32.41);
+  
+/* Round off to nearest value */
+round_ = ROUND(5621.78);
+run;
+
+proc print data = trunc_functions noobs;
+run;
+
+
+
+Miscellaneous Functions
+
+
+data misc_functions;
+
+/* Nearest greatest integer */
+state2=zipstate('01040');
+ 
+/* Amortization calculation */
+payment=mort(50000, . , .10/12,30*12);
+
+proc print data = misc_functions noobs;
+run;
+List Input Method
+
+DATA TEMP;
+INPUT   EMPID ENAME $ DEPT $ ;
+DATALINES;
+1 Rick  IT
+2 Dan  OPS
+3 Tusar  IT
+4 Pranab  OPS
+5 Rasmi  FIN
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Named Input Method
+
+DATA TEMP;
+INPUT   
+EMPID= ENAME= $ DEPT= $ ;
+DATALINES;
+EMPID= 1 ENAME= Rick  DEPT= IT
+EMPID= 2 ENAME= Dan  DEPT= OPS
+EMPID= 3 ENAME= Tusar  DEPT= IT
+EMPID= 4 ENAME= Pranab  DEPT= OPS
+EMPID= 5 ENAME= Rasmi  DEPT= FIN
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Column Input Method
+
+
+DATA TEMP;
+INPUT   EMPID 1-3 ENAME $ 4-12 DEPT $ 13-16;
+DATALINES;
+14 Rick     IT 
+241Dan      OPS 
+30 Sanvi    IT 
+410Chanchal OPS 
+52 Piyu     FIN 
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Formatted Input Method
+
+
+DATA TEMP;
+INPUT   @1 EMPID $ @4 ENAME $ @13 DEPT $ ;
+DATALINES;
+14 Rick     IT 
+241 Dan      OPS 
+30 Sanvi    IT 
+410 Chanchal OPS 
+52 Piyu     FIN 
+;
+PROC PRINT DATA = TEMP;
+RUN;
+Macro variables
+
+
+Global Macro variable
+
+proc print data = sashelp.cars;
+where make = 'Audi' and type = 'Sports' ;
+ TITLE "Sales as of &SYSDAY &SYSDATE";
+run;
+
+Local Macro variable
+
+Syntax
+The local variables are declared with below syntax.
+
+% LET (Macro Variable Name) = Value;
+
+
+
+Macro Programs
+
+Syntax
+The local variables are declared with below syntax.
+
+# Creating a Macro program.
+%MACRO (Param1, Param2,….Paramn);
+
+Macro Statements;
+
+%MEND;
+
+# Calling a Macro program.
+%MacroName (Value1, Value2,…..Valuen);
+
+
+Example
+
+%MACRO show_result(make_ , type_);
+proc print data = sashelp.cars;
+where make = "&make_" and type = "&type_" ;
+TITLE "Sales as of &SYSDAY &SYSDATE";
+run;
+%MEND;
+
+%show_result(BMW,SUV);
+
+
+
+Commonly Used Macros
+
+
+Macro %PUT
+
+This macro statement writes text or macro variable information to the SAS log. In the below example the value of the variable 'today' is written to the program log.
+
+data _null_;
+CALL SYMPUT ('today',
+TRIM(PUT("&sysdate"d,worddate22.)));
+run;
+%put &today;
+
+
+
+Macro %RETURN
+Execution of this macro causes normal termination of the currently executing macro when certain condition evaluates to be true. In the below example when the value of the variable "val" becomes 10, the macro terminates else it contnues.
+
+%macro check_condition(val);
+   %if &val = 10 %then %return;
+
+    data p;
+       x=34.2;
+    run;  
+
+%mend check_condition;  
+
+%check_condition(11)  ;
+
+
+
+Macro %END
+This macro definition contains a %DO %WHILE loop that ends, as required, with a %END statement. In the below example the macro named test takes a user input and runs the DO loop using this input value. The end of DO loop is achieved through the %end statement while the end of macro is achieved through %mend statement.
+
+%macro test(finish);
+   %let i=1;
+   %do %while (&i <&finish);
+      %put the value of i is &i;
+      %let i=%eval(&i+1);
+   %end;
+%mend test;
+%test(5)
+
+
+SAS Date Informat
+The source data can be read properly by using specific date informats as shown below. The digit at the end of the informat indicates the minimum width of the date string to be read completely using the informat. A smaller width will give incorrect result. with SAS V9, there is a generic date format anydtdte15. which can process any date input.
+
+Input Date	Date width	Informat
+03/11/2014	10	mmddyy10.
+03/11/14	8	mmddyy8.
+December 11, 2012	20	worddate20.
+14mar2011	9	date9.
+14-mar-2011	11	date11.
+14-mar-2011	15	anydtdte15.
+
+
+Example
+The below code shows the reading of different date formats. Please note the all the output values are just numbers as we have not applied any format statement to the output values.
+
+DATA TEMP;
+INPUT @1 Date1 date11. @12 Date2 anydtdte15. @23 Date3 mmddyy10.   ;
+DATALINES;
+02-mar-2012 3/02/2012 3/02/2012
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+
+SAS Date output format
+
+Example
+In the below exampel the date is read in one format but displayed in another format.
+
+DATA TEMP;
+INPUT  @1 DOJ1 mmddyy10. @12 DOJ2 mmddyy10. ;
+format  DOJ1 date11.  DOJ2 worddate20. ;
+DATALINES;
+01/12/2012 02/11/1998 
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+	# perfil gawk, criado Sat Aug 11 11:02:45 2018
+
+	# Regra(s)
+
+      {
+    	  	if (NR == 1) { # 1
+     	  		dia = $4
+		}
+      	print dia,$1, $2, $3, $4, $5
+	}
+
+data TEMP;
+INPUT ID	NAME $	SALARY	DEPARTMENT $;
+comm = SALARY*0.25;
+LABEL ID = 'Employee id' comm = 'COMMISION';
+DATALINES;
+1 Rick 623.3 IT
+2 Dan 515.2 Operations
+3 Michelle 611 IT
+4 Ryan 729 HR
+5 Gary 843.25 Finance
+6 Nina 578 IT
+7 Simon 632.8 Operations
+8 Guru 722.5 Finance
+;
+RUN;
+
+PROC MEANS;
+run;
+
+PROC PRINT data=temp;
+WHERE salary > 700;
+run;
+
+# Valid Variable Names
+REVENUE_YEAR
+MaxVal
+_Length
+
+# Invalid variable Names
+Miles Per Liter	#contains Space.
+RainfFall%      # contains apecial character other than underscore.
+90_high		# Starts with a number.
+
+
+
+# Temporary data sets.
+DATA TempData;
+DATA abc;
+DATA newdat;
+
+# Permanent data sets.
+DATA LIBRARY1.DATA1
+DATA MYLIB.newdat;
+
+
+
+* This is comment ;
+Following is a multiline comment example:
+
+* This is first line of the comment
+* This is second line of the comment;
+
+/* This is comment */
+
+/* This is first line of the comment
+* This is second line of the comment */
+
+
+SAS Variable Types
+
+INPUT VAR1 VAR2 VAR3; 		#Define numeric variables in the data set.
+
+Example
+INPUT ID SALARY COMM_PERCENT;
+
+
+INPUT VAR1 $ VAR2 $ VAR3 $; 	#Define character variables in the data set.
+Example
+INPUT FNAME $ LNAME $ ADDRESS $;
+
+
+INPUT VAR1 DATE11. VAR2 MMDDYY10. ; #Define date variables in the data set.
+INPUT DOB DATE11. START_DATE MMDDYY10. ;
+
+
+Example
+The below code shows how the three types of variables are declared and used in a SAS Program
+
+DATA TEMP;
+INPUT ID NAME $ SALARY DEPT $ DOJ DATE9. ;
+FORMAT DOJ DATE9. ;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Michelle 611 IT 21OCT2000
+4 Ryan 729 HR 30JUL2012
+5 Gary 843.25 FIN 06AUG2000
+6 Tusar 578 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+data string_examples;
+   LENGTH string1 $ 6 String2 $ 5;
+   /*String variables of length 6 and 5 */
+   String1 = 'Hello';
+   String2 = 'World';
+   Joined_strings =  String1 ||String2 ;
+ run;
+proc print data = string_examples noobs;
+run;
+
+
+SUBSTRN
+This function extracts a substring using the start and end positions. In case of no end position is mentioned it extracts all the characters till end of the string.
+
+Syntax
+SUBSTRN('stringval',p1,p2)
+
+data string_examples;
+   LENGTH string1 $ 6 ;
+   String1 = 'Hello';
+   sub_string1 = substrn(String1,2,4) ;
+   /*Extract from position 2 to 4 */
+   sub_string2 = substrn(String1,3) ;
+   /*Extract from position 3 onwards */
+run;
+proc print data = string_examples noobs;
+run;
+
+
+TRIMN
+
+Syntax
+TRIMN('stringval')
+
+data string_examples;
+   LENGTH string1 $ 7  ;
+   String1='Hello  ';
+   length_string1 = lengthc(String1);
+   length_trimmed_string = lengthc(TRIMN(String1));
+run;
+proc print data = string_examples noobs;
+run;
+ARRAY ARRAY-NAME(SUBSCRIPT) ($) VARIABLE-LIST ARRAY-VALUES
+
+ARRAY is the SAS keyword to declare an array.
+ARRAY-NAME is the name of the array which follows the same rule as variable names.
+SUBSCRIPT is the number of values the array is going to store.
+($) is an optional parameter to be used only if the array is going to store character values.
+VARIABLE-LIST is the optional list of variables which are the place holders for array values.
+ARRAY-VALUES are the actual values that are stored in the array. They can be declared here or can be read from a file or dataline.
+
+# Declare an array of length 5 named AGE with values.
+ARRAY AGE[5] (12 18 5 62 44);
+
+# Declare an array of length 5 named COUNTRIES with values starting at index 0.
+ARRAY COUNTRIES(0:8) A B C D E F G H I;
+
+# Declare an array of length 5 named QUESTS which contain character values.
+ARRAY QUESTS(1:5) $ Q1-Q5;
+
+# Declare an array of required length as per the number of values supplied.
+ARRAY ANSWER(*) A1-A100;
+
+
+
+
+
+DATA array_example;
+INPUT a1 $ a2 $ a3 $ a4 $ a5 $;
+ARRAY colours(5) $ a1-a5;
+mix = colours[1]||'+'||colours[2];
+DATALINES;
+yello pink orange green blue
+;
+RUN;
+PROC PRINT DATA=array_example;
+RUN;
+
+
+Using the OF operator
+The OF operator is used when analysing the data forma an Array to perform calculations on the entire row of an array. In the below example we apply the Sum and Mean of values in each row.
+
+DATA array_example_OF;
+	INPUT A1 A2 A3 A4;
+	ARRAY A(4) A1-A4;
+	A_SUM=SUM(OF A(*));
+	A_MEAN=MEAN(OF A(*));
+	A_MIN=MIN(OF A(*));
+	DATALINES;
+	21 4 52 11
+	96 25 42 6
+	;
+	RUN;
+	PROC PRINT DATA=array_example_OF;
+	RUN;
+
+
+Using the IN operator
+The value in an array can also be accessed using the IN operator which checks for the presence of a value in the row of the array. In the below example we check for the availability of the colour "Yellow" in the data. This value is case sensitive.
+
+DATA array_in_example;
+	INPUT A1 $ A2 $ A3 $ A4 $;
+	ARRAY COLOURS(4) A1-A4;
+	IF 'yellow' IN COLOURS THEN available='Yes';ELSE available='No';
+	DATALINES;
+	Orange pink violet yellow
+	;
+	RUN;
+	PROC PRINT DATA=array_in_example;
+	RUN;
+
+
+
+Syntax
+The Syntax for a numeric informat is:
+
+Varname Formatnamew.d
+Following is the description of the parameters used:
+
+Varname is the name of the variable.
+Formatname is the name of the name of the numeric format applied to the variable.
+w is the maximum number of data columns (including digits after decimal & the decimal point itself) allowed to be stored for the variable.
+d is the number of digits to the right of the decimal.
+
+Reading Numeric formats
+Below is a list of formats used for reading the data into SAS.
+
+Input Numeric Formats
+Format	Use
+n.	Maximum "n" number of columns with no decimal point.
+n.p	Maximum "n" number of columns with "p" decimal points.
+COMMAn.p	Maximum "n" number of columns with "p" decimal places which removes any comma or dollar signs.
+
+
+
+Displaying Numeric formats
+Similar to applying format while reading the data, below is a list of formats used for displaying the data in the output of a SAS program.
+
+Output Numeric Formats
+n.	Write maximum "n" number of digits with no decimal point.
+n.p	Write maximum "n.p" number of columns with "p" decimal points.
+DOLLARn.p	Write maximum "n" number of columns with p decimal places, leading dollar sign and a comma at the thousandth place.
+
+
+Examples
+Below examples illustrate above scenarios.
+
+DATA MYDATA1;
+input x 6.; /*maxiiuum width of the data*/
+format x 6.3;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+DATA MYDATA2;
+input x 6.; /*maximum width of the data*/
+format x 5.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA2;
+RUN;
+
+DATA MYDATA3;
+input x 6.; /*maximum width of the data*/
+format x DOLLAR10.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA3;
+RUN;
+
+
+
+
+1 	8722.0 # Display 6 columns with zero appended after decimal.
+2 	93.200 # Display 6 columns with zero appended after decimal.
+3 	0.112  # No integers before decimal, so display 3 available digits after decimal.
+4 	15.116 # Display 6 columns with 3 available digits after decimal.
+
+# MYDATA2
+Obs 	x
+1 	8722  # Display 5 columns. Only 4 are available.
+2 	93.20 # Display 5 columns with zero appended after decimal.
+3 	0.11  # Display 5 columns with 2 places after decimal.
+4 	15.12 # Display 5 columns with 2 places after decimal.
+
+# MYDATA3
+Obs 	x
+1 	$8,722.00 # Display 10 columns with leading $ sign, comma at thousandth place and zeros appended after decimal.
+2 	$93.20    # Only 2 integers available before decimal and one available after the decimal.
+3 	$0.11	  # No integers available before decimal and two available after the decimal.
+4 	$15.12    # Only 2 integers available before decimal and two available after the decimal.
+Arithmetic Operators
+
+DATA MYDATA1;
+input @1 COL1 4.2	@7 COL2 3.1; 
+Add_result = COL1+COL2;
+Sub_result = COL1-COL2;
+Mult_result = COL1*COL2;
+Div_result = COL1/COL2;
+Expo_result = COL1**COL2;
+datalines;
+11.21 5.3
+3.11  11
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Logical Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+and_=(COL1 > 10 & COL2 > 5 );
+or_ = (COL1 > 12 | COL2 > 15 );
+not_ = ~( COL2 > 7 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Comparison Operators
+
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1; 
+EQ_ = (COL1 = 11.21);
+NEQ_= (COL1 ^= 11.21);
+GT_ = (COL2 => 8);
+LT_ = (COL2 <= 12);
+IN_ = COL2 in( 6.2,5.3,12 );
+datalines;
+11.21 5.3
+3.11  11.4
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+
+Minimum/Maximum Operators
+
+DATA MYDATA1;
+input @1 COL1 5.2	@7 COL2 4.1 @12 COL3 6.3; 
+min_ = MIN(COL1 , COL2 , COL3);
+max_ = MAX( COL1, COl2 , COL3);
+datalines;
+11.21 5.3 29.012
+3.11  11.4 18.512
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+
+Concatenation Operator
+
+DATA MYDATA1;
+input  COL1 $	COL2 $  COL3 $; 
+concat_ = (COL1 || COL2 || COL3);
+datalines;
+Tutorial s point
+simple easy learning
+;
+PROC PRINT DATA = MYDATA1;
+RUN;
+Do index loop
+
+Syntax
+DO indexvariable = initialvalue to finalvalue ;
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA1;
+SUM = 0;
+DO VAR = 1 to 5;
+   SUM = SUM+VAR;
+END;
+
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+Do While
+
+DO WHILE (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO WHILE(VAR<6) ;
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;
+
+
+
+Do Until
+
+Syntax
+DO UNTIl (variable  condition);
+. . . SAS statements . . . ;
+END;
+Example
+DATA MYDATA;
+SUM = 0;
+VAR = 1;
+DO UNTIL(VAR>5);
+   SUM = SUM+VAR;
+   VAR+1;
+END;
+   PROC PRINT;
+   RUN;
+1	IF Statement.
+An if statement consists of a condition. If the condition is true then the specific data is fetched.
+
+2	IF-THEN-ELSE Statement.
+An if statement followed by else statement, which executes when the boolean condition is false.
+
+3	IF-THEN-ELSE-IF Statement.
+An if statement followed by else statement, which is again followed by another pair of IF-THEN Statement.
+
+4	IF-THEN-DELETE Statement.
+An if statement consists of acondition, which when true deletes the specific data from the observations.
+
+
+IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE Statement
+
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650 THEN SALRANGE ="HIGH";
+ELSE SALRANGE = "LOW";
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY < 600 THEN SALRANGE ="LOW";
+ELSE IF 600 <= SALARY <= 700 THEN SALRANGE="MEDIUM";
+ELSE IF 700 < SALARY THEN SALRANGE="MEDIUM";
+PROC PRINT DATA=EMPDAT1;
+run; 
+
+
+IF-THEN-DELETE Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 700 THEN DELETE;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+Mathematical Functions
+
+
+data Math_functions;
+v1=21; v2=42; v3=13; v4=10; v5=29;
+
+/* Get Maximum value */
+max_val = MAX(v1,v2,v3,v4,v5);
+
+/* Get Minimum value */
+min_val = MIN (v1,v2,v3,v4,v5);
+
+/* Get Median value */
+med_val = MEDIAN (v1,v2,v3,v4,v5);
+
+/* Get a random number */
+rand_val = RANUNI(0);
+
+/* Get Square root of sum of the values */
+SR_val= SQRT(sum(v1,v2,v3,v4,v5));
+
+proc print data = Math_functions noobs;
+run;
+
+
+
+Using array
+
+data Math_functions2;
+array v[5] (21 42 13 10 39);
+/* Get Maximum value */
+max_val = MAX(of v(*));
+
+/* Get Minimum value */
+min_val = MIN (of v(*));
+
+/* Get Median value */
+med_val = MEDIAN (of v(*));
+
+/* Get a random number */
+rand_val = RANUNI(0);
+
+/* Get Square root of sum of the values */
+SR_val= SQRT(sum(of v(*)));
+
+proc print data=math_functions2;
+run;
+
+
+
+Date Functions
+
+
+data date_functions;
+INPUT @1 date1 date9. @11 date2 date9.;
+format date1 date9.  date2 date9.;
+
+/* Get the interval between the dates in years*/
+Years_ = INTCK('YEAR',date1,date2);
+
+/* Get the interval between the dates in months*/
+months_ = INTCK('MONTH',date1,date2);
+
+/* Get the week day from the date*/
+weekday_ =  WEEKDAY(date1);
+
+/* Get Today's date in SAS date format */
+today_ = TODAY();
+
+/* Get current time in SAS time format */
+time_ = time();
+DATALINES;
+21OCT2000 16AUG1998
+01MAR2009 11JUL2012
+;
+proc print data = date_functions noobs;
+run;
+
+
+Character Functions
+
+
+data character_functions;
+
+/* Convert the string into lower case */
+lowcse_ = LOWCASE('HELLO');
+  
+/* Convert the string into upper case */
+upcase_ = UPCASE('hello');
+  
+/* Reverse the string */
+reverse_ = REVERSE('Hello');
+  
+/* Return the nth word */
+nth_letter_ = SCAN('Learn SAS Now',2);
+run;
+
+proc print data = character_functions noobs;
+run;
+
+
+
+Truncation Functions
+
+data trunc_functions;
+
+/* Nearest greatest integer */
+ceil_ = CEIL(11.85);
+  
+/* Nearest greatest integer */
+floor_ = FLOOR(11.85);
+  
+/* Integer portion of a number */
+int_ = INT(32.41);
+  
+/* Round off to nearest value */
+round_ = ROUND(5621.78);
+run;
+
+proc print data = trunc_functions noobs;
+run;
+
+
+
+Miscellaneous Functions
+
+
+data misc_functions;
+
+/* Nearest greatest integer */
+state2=zipstate('01040');
+ 
+/* Amortization calculation */
+payment=mort(50000, . , .10/12,30*12);
+
+proc print data = misc_functions noobs;
+run;
+List Input Method
+
+DATA TEMP;
+INPUT   EMPID ENAME $ DEPT $ ;
+DATALINES;
+1 Rick  IT
+2 Dan  OPS
+3 Tusar  IT
+4 Pranab  OPS
+5 Rasmi  FIN
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Named Input Method
+
+DATA TEMP;
+INPUT   
+EMPID= ENAME= $ DEPT= $ ;
+DATALINES;
+EMPID= 1 ENAME= Rick  DEPT= IT
+EMPID= 2 ENAME= Dan  DEPT= OPS
+EMPID= 3 ENAME= Tusar  DEPT= IT
+EMPID= 4 ENAME= Pranab  DEPT= OPS
+EMPID= 5 ENAME= Rasmi  DEPT= FIN
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Column Input Method
+
+
+DATA TEMP;
+INPUT   EMPID 1-3 ENAME $ 4-12 DEPT $ 13-16;
+DATALINES;
+14 Rick     IT 
+241Dan      OPS 
+30 Sanvi    IT 
+410Chanchal OPS 
+52 Piyu     FIN 
+;
+PROC PRINT DATA = TEMP;
+RUN;
+
+
+Formatted Input Method
+
+
+DATA TEMP;
+INPUT   @1 EMPID $ @4 ENAME $ @13 DEPT $ ;
+DATALINES;
+14 Rick     IT 
+241 Dan      OPS 
+30 Sanvi    IT 
+410 Chanchal OPS 
+52 Piyu     FIN 
+;
+PROC PRINT DATA = TEMP;
+RUN;
+Macro variables
+
+
+Global Macro variable
+
+proc print data = sashelp.cars;
+where make = 'Audi' and type = 'Sports' ;
+ TITLE "Sales as of &SYSDAY &SYSDATE";
+run;
+
+Local Macro variable
+
+Syntax
+The local variables are declared with below syntax.
+
+% LET (Macro Variable Name) = Value;
+
+
+
+Macro Programs
+
+Syntax
+The local variables are declared with below syntax.
+
+# Creating a Macro program.
+%MACRO (Param1, Param2,….Paramn);
+
+Macro Statements;
+
+%MEND;
+
+# Calling a Macro program.
+%MacroName (Value1, Value2,…..Valuen);
+
+
+Example
+
+%MACRO show_result(make_ , type_);
+proc print data = sashelp.cars;
+where make = "&make_" and type = "&type_" ;
+TITLE "Sales as of &SYSDAY &SYSDATE";
+run;
+%MEND;
+
+%show_result(BMW,SUV);
+
+
+
+Commonly Used Macros
+
+
+Macro %PUT
+
+This macro statement writes text or macro variable information to the SAS log. In the below example the value of the variable 'today' is written to the program log.
+
+data _null_;
+CALL SYMPUT ('today',
+TRIM(PUT("&sysdate"d,worddate22.)));
+run;
+%put &today;
+
+
+
+Macro %RETURN
+Execution of this macro causes normal termination of the currently executing macro when certain condition evaluates to be true. In the below example when the value of the variable "val" becomes 10, the macro terminates else it contnues.
+
+%macro check_condition(val);
+   %if &val = 10 %then %return;
+
+    data p;
+       x=34.2;
+    run;  
+
+%mend check_condition;  
+
+%check_condition(11)  ;
+
+
+
+Macro %END
+This macro definition contains a %DO %WHILE loop that ends, as required, with a %END statement. In the below example the macro named test takes a user input and runs the DO loop using this input value. The end of DO loop is achieved through the %end statement while the end of macro is achieved through %mend statement.
+
+%macro test(finish);
+   %let i=1;
+   %do %while (&i <&finish);
+      %put the value of i is &i;
+      %let i=%eval(&i+1);
+   %end;
+%mend test;
+%test(5)
+
+
+SAS Date Informat
+The source data can be read properly by using specific date informats as shown below. The digit at the end of the informat indicates the minimum width of the date string to be read completely using the informat. A smaller width will give incorrect result. with SAS V9, there is a generic date format anydtdte15. which can process any date input.
+
+Input Date	Date width	Informat
+03/11/2014	10	mmddyy10.
+03/11/14	8	mmddyy8.
+December 11, 2012	20	worddate20.
+14mar2011	9	date9.
+14-mar-2011	11	date11.
+14-mar-2011	15	anydtdte15.
+
+
+Example
+The below code shows the reading of different date formats. Please note the all the output values are just numbers as we have not applied any format statement to the output values.
+
+DATA TEMP;
+INPUT @1 Date1 date11. @12 Date2 anydtdte15. @23 Date3 mmddyy10.   ;
+DATALINES;
+02-mar-2012 3/02/2012 3/02/2012
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+
+SAS Date output format
+
+Example
+In the below exampel the date is read in one format but displayed in another format.
+
+DATA TEMP;
+INPUT  @1 DOJ1 mmddyy10. @12 DOJ2 mmddyy10. ;
+format  DOJ1 date11.  DOJ2 worddate20. ;
+DATALINES;
+01/12/2012 02/11/1998 
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+	# perfil gawk, criado Sat Aug 11 11:02:45 2018
+
+	# Regra(s)
+
+      {
+    	  	if (NR == 1) { # 1
+     	  		dia = $4
+		}
+      	print dia,$1, $2, $3, $4, $5
+	}
+

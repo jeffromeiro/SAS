@@ -1,0 +1,42 @@
+data string_examples;
+   LENGTH string1 $ 6 String2 $ 5;
+   /*String variables of length 6 and 5 */
+   String1 = 'Hello';
+   String2 = 'World';
+   Joined_strings =  String1 ||String2 ;
+ run;
+proc print data = string_examples noobs;
+run;
+
+
+SUBSTRN
+This function extracts a substring using the start and end positions. In case of no end position is mentioned it extracts all the characters till end of the string.
+
+Syntax
+SUBSTRN('stringval',p1,p2)
+
+data string_examples;
+   LENGTH string1 $ 6 ;
+   String1 = 'Hello';
+   sub_string1 = substrn(String1,2,4) ;
+   /*Extract from position 2 to 4 */
+   sub_string2 = substrn(String1,3) ;
+   /*Extract from position 3 onwards */
+run;
+proc print data = string_examples noobs;
+run;
+
+
+TRIMN
+
+Syntax
+TRIMN('stringval')
+
+data string_examples;
+   LENGTH string1 $ 7  ;
+   String1='Hello  ';
+   length_string1 = lengthc(String1);
+   length_trimmed_string = lengthc(TRIMN(String1));
+run;
+proc print data = string_examples noobs;
+run;

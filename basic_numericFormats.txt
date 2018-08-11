@@ -1,0 +1,88 @@
+Syntax
+The Syntax for a numeric informat is:
+
+Varname Formatnamew.d
+Following is the description of the parameters used:
+
+Varname is the name of the variable.
+Formatname is the name of the name of the numeric format applied to the variable.
+w is the maximum number of data columns (including digits after decimal & the decimal point itself) allowed to be stored for the variable.
+d is the number of digits to the right of the decimal.
+
+Reading Numeric formats
+Below is a list of formats used for reading the data into SAS.
+
+Input Numeric Formats
+Format	Use
+n.	Maximum "n" number of columns with no decimal point.
+n.p	Maximum "n" number of columns with "p" decimal points.
+COMMAn.p	Maximum "n" number of columns with "p" decimal places which removes any comma or dollar signs.
+
+
+
+Displaying Numeric formats
+Similar to applying format while reading the data, below is a list of formats used for displaying the data in the output of a SAS program.
+
+Output Numeric Formats
+n.	Write maximum "n" number of digits with no decimal point.
+n.p	Write maximum "n.p" number of columns with "p" decimal points.
+DOLLARn.p	Write maximum "n" number of columns with p decimal places, leading dollar sign and a comma at the thousandth place.
+
+
+Examples
+Below examples illustrate above scenarios.
+
+DATA MYDATA1;
+input x 6.; /*maxiiuum width of the data*/
+format x 6.3;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA = MYDATA1;
+RUN;
+
+DATA MYDATA2;
+input x 6.; /*maximum width of the data*/
+format x 5.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA2;
+RUN;
+
+DATA MYDATA3;
+input x 6.; /*maximum width of the data*/
+format x DOLLAR10.2;
+datalines;
+8722
+93.2
+.1122
+15.116
+PROC PRINT DATA=MYDATA3;
+RUN;
+
+
+
+
+1 	8722.0 # Display 6 columns with zero appended after decimal.
+2 	93.200 # Display 6 columns with zero appended after decimal.
+3 	0.112  # No integers before decimal, so display 3 available digits after decimal.
+4 	15.116 # Display 6 columns with 3 available digits after decimal.
+
+# MYDATA2
+Obs 	x
+1 	8722  # Display 5 columns. Only 4 are available.
+2 	93.20 # Display 5 columns with zero appended after decimal.
+3 	0.11  # Display 5 columns with 2 places after decimal.
+4 	15.12 # Display 5 columns with 2 places after decimal.
+
+# MYDATA3
+Obs 	x
+1 	$8,722.00 # Display 10 columns with leading $ sign, comma at thousandth place and zeros appended after decimal.
+2 	$93.20    # Only 2 integers available before decimal and one available after the decimal.
+3 	$0.11	  # No integers available before decimal and two available after the decimal.
+4 	$15.12    # Only 2 integers available before decimal and two available after the decimal.

@@ -1,0 +1,38 @@
+SAS Date Informat
+The source data can be read properly by using specific date informats as shown below. The digit at the end of the informat indicates the minimum width of the date string to be read completely using the informat. A smaller width will give incorrect result. with SAS V9, there is a generic date format anydtdte15. which can process any date input.
+
+Input Date	Date width	Informat
+03/11/2014	10	mmddyy10.
+03/11/14	8	mmddyy8.
+December 11, 2012	20	worddate20.
+14mar2011	9	date9.
+14-mar-2011	11	date11.
+14-mar-2011	15	anydtdte15.
+
+
+Example
+The below code shows the reading of different date formats. Please note the all the output values are just numbers as we have not applied any format statement to the output values.
+
+DATA TEMP;
+INPUT @1 Date1 date11. @12 Date2 anydtdte15. @23 Date3 mmddyy10.   ;
+DATALINES;
+02-mar-2012 3/02/2012 3/02/2012
+;
+PROC PRINT DATA=TEMP;
+RUN;
+
+
+SAS Date output format
+
+Example
+In the below exampel the date is read in one format but displayed in another format.
+
+DATA TEMP;
+INPUT  @1 DOJ1 mmddyy10. @12 DOJ2 mmddyy10. ;
+format  DOJ1 date11.  DOJ2 worddate20. ;
+DATALINES;
+01/12/2012 02/11/1998 
+;
+PROC PRINT DATA=TEMP;
+RUN;
+

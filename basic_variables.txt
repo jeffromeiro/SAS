@@ -1,0 +1,36 @@
+SAS Variable Types
+
+INPUT VAR1 VAR2 VAR3; 		#Define numeric variables in the data set.
+
+Example
+INPUT ID SALARY COMM_PERCENT;
+
+
+INPUT VAR1 $ VAR2 $ VAR3 $; 	#Define character variables in the data set.
+Example
+INPUT FNAME $ LNAME $ ADDRESS $;
+
+
+INPUT VAR1 DATE11. VAR2 MMDDYY10. ; #Define date variables in the data set.
+INPUT DOB DATE11. START_DATE MMDDYY10. ;
+
+
+Example
+The below code shows how the three types of variables are declared and used in a SAS Program
+
+DATA TEMP;
+INPUT ID NAME $ SALARY DEPT $ DOJ DATE9. ;
+FORMAT DOJ DATE9. ;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Michelle 611 IT 21OCT2000
+4 Ryan 729 HR 30JUL2012
+5 Gary 843.25 FIN 06AUG2000
+6 Tusar 578 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+PROC PRINT DATA=TEMP;
+RUN;
+

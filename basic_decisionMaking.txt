@@ -1,0 +1,111 @@
+1	IF Statement.
+An if statement consists of a condition. If the condition is true then the specific data is fetched.
+
+2	IF-THEN-ELSE Statement.
+An if statement followed by else statement, which executes when the boolean condition is false.
+
+3	IF-THEN-ELSE-IF Statement.
+An if statement followed by else statement, which is again followed by another pair of IF-THEN Statement.
+
+4	IF-THEN-DELETE Statement.
+An if statement consists of acondition, which when true deletes the specific data from the observations.
+
+
+IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE Statement
+
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 650 THEN SALRANGE ="HIGH";
+ELSE SALRANGE = "LOW";
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
+
+IF THEN ELSE IF Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY < 600 THEN SALRANGE ="LOW";
+ELSE IF 600 <= SALARY <= 700 THEN SALRANGE="MEDIUM";
+ELSE IF 700 < SALARY THEN SALRANGE="MEDIUM";
+PROC PRINT DATA=EMPDAT1;
+run; 
+
+
+IF-THEN-DELETE Statement
+
+DATA EMPDAT;
+INPUT   EMPID ENAME $ SALARY DEPT $ DOJ DATE9.;
+LABEL ID = 'Employee ID';
+FORMAT DOJ DATE9.;
+DATALINES;
+1 Rick 623.3 IT 02APR2001
+2 Dan 515.2 OPS 11JUL2012
+3 Mike 611.5 IT 21OCT2000
+4 Ryan 729.1 HR 30JUL2012
+5 Gary 843.2 FIN 06AUG2000
+6 Tusar 578.6 IT 01MAR2009
+7 Pranab 632.8 OPS 16AUG1998
+8 Rasmi 722.5 FIN 13SEP2014
+;
+Data EMPDAT1;
+Set EMPDAT;
+IF SALARY > 700 THEN DELETE;
+PROC PRINT DATA = EMPDAT1;
+run; 
+
+
